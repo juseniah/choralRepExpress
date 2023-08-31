@@ -17,7 +17,9 @@ ChoralRepExpress is a Node.js application that fetches and exports product data 
 
 2. Install the required dependencies:
 
-    ```npm install```
+    ```bash
+    npm install
+    ```
 
 3. Rename the `keys.sample.json` file to `keys.json` and fill in your Google Sheets API credentials.
 
