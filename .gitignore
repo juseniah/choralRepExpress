@@ -1,0 +1,27 @@
+# Directories
+node_modules/
+dist/
+
+# Files
+*.log
+*.csv
+*.xlsx
+*.txt
+
+# macOS specific
+.DS_Store
+
+# IDE/Editor specific
+.vscode/
+.idea/
+
+# Environment variables and sensitive information
+keys.json
+
+# TypeScript specific
+*.js
+*.js.map
+
+# Compiled output
+*.js
+*.js.map
