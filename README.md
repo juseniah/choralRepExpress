@@ -1,6 +1,6 @@
 # ChoralRepExpress
 
-ChoralRepExpress is a Node.js application that fetches and exports product data from JW Pepper's website. It is intended to be used by musicians who need to retrieve data for sheet music products via the website in a useful format.
+ChoralRepExpress is a Node.js application designed to help users retrieve and organize sheet music product data. It uses web scraping techniques to extract data from web pages, and can export the data to a variety of formats, including Google Sheets, CSV, and XLSX.
 
 ## Features
 

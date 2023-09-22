@@ -1,6 +1,7 @@
 import express from "express";
 import * as bodyParser from "body-parser";
 import indexRoutes from "./routes/index";
+import * as path from "path";
 
 const app = express();
 const port = 3000;
@@ -8,6 +9,9 @@ const port = 3000;
 // Use body-parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+// Serve the static CSS files
+app.use('/css', express.static(path.join(__dirname, 'css')));
 
 // All routes for the app are here
 app.use("/", indexRoutes);
