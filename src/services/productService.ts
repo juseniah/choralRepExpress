@@ -1,23 +1,25 @@
-import axios from "axios";
-import * as cheerio from "cheerio";
-import { ProductDetails } from "../interfaces/ProductDetails";
+import puppeteer from 'puppeteer';
+import * as cheerio from 'cheerio';
+import {ProductDetails} from '../interfaces/ProductDetails';
 
 async function getProductDetails(id: string): Promise<ProductDetails> {
   let productDetails: ProductDetails;
   const html = await getHtmlFromPepper(id);
   if (!html) {
     productDetails = {
-      id: "",
-      title: "",
-      composer: "",
-      voicing: "",
-      publisher: "",
+      id: '',
+      title: '',
+      composer: '',
+      voicing: '',
+      publisher: '',
       unitPriceUSD: 0,
     };
   } else {
     productDetails = scrapeSongDataFromHtml(id, html);
   }
-  console.log({productDetails})
+
+  // Log the extracted product details
+  console.log({ productDetails });
   return productDetails;
 }
 
@@ -44,13 +46,36 @@ function scrapeSongDataFromHtml(id: string, html: string): ProductDetails {
   return productDetails;
 }
 
+async function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function getHtmlFromPepper(id: string): Promise<string> {
   const sheetMusicUrl = `https://www.jwpepper.com/sheet-music/${id}.item`;
   console.log(`Getting HTML from ${sheetMusicUrl}`);
 
   try {
-    const response = await axios.get(sheetMusicUrl);
-    const html = response.data;
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+
+    // Set User-Agent and Viewport to mimic a real user
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+    await page.setViewport({ width: 1280, height: 800 });
+
+    await page.goto(sheetMusicUrl, { waitUntil: 'networkidle2' });
+
+    // Wait for Cloudflare challenge to be solved
+    await delay(2000); // Adjust timeout as needed
+
+    // Optionally, wait for a specific element to ensure page is fully loaded
+    await page.waitForSelector('body', { timeout: 30000 });
+
+    const html = await page.content();
+    await browser.close();
+
+    // Log the raw HTML response for debugging
+    console.log(`Raw HTML response for ${id}:\n`, html);
+
     return html;
   } catch (error) {
     console.error(`Error getting HTML from ${sheetMusicUrl}: `, error);
