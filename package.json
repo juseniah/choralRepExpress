@@ -7,7 +7,7 @@
     "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx tsc && npm run scss && node dist/app.js",
-    "scss": "node-sass src/scss -o dist/css"
+    "scss": "node-sass src/scss -o css"
   },
   "keywords": [],
   "author": "",

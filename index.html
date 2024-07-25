@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JW Pepper Data</title>
+  <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+  <div id="container">
+    <h1>Sheet Music Product Data</h1>
+    <form action="/" method="post" class="show-form">
+      <textarea name="ids" rows="5" cols="50" placeholder="Enter JW Pepper product IDs (separated by commas)"></textarea>
+      <br>
+      <label><input type="checkbox" name="exportOption" value="googleSheet">Export to Google Sheets</label>
+      <label><input type="checkbox" name="exportOption" value="csv">Export to CSV</label>
+      <label><input type="checkbox" name="exportOption" value="xlsx">Export to XLSX</label>
+      <br>
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="result" class="hide-result"></div>
+  </div>
+
+  <script>
+    const productData = JSON.parse(`<%- productData %>`);
+    const action = "<%= action %>";
+
+    function displayResult(data, action) {
+      const form = document.querySelector('.show-form');
+      const resultDiv = document.getElementById('result');
+
+      // Hide the form
+      form.classList.add('hide-form');
+
+      // Show the results
+      resultDiv.classList.remove('hide-result');
+
+      // Clear any existing content
+      resultDiv.innerHTML = '';
+
+      // Display action message
+      const actionMessageElement = document.createElement('p');
+      actionMessageElement.textContent = `Action taken: ${action}`;
+      resultDiv.appendChild(actionMessageElement);
+
+      // Display product details
+      const list = document.createElement("ul");
+
+      data.forEach((product) => {
+        const listItem = document.createElement("li");
+        listItem.innerHTML = `
+          ID: ${product.id}<br>
+          Title: ${product.title}<br>
+          Composer: ${product.composer}<br>
+          Voicing: ${product.voicing}<br>
+          Publisher: ${product.publisher}<br>
+          Unit Price (USD): ${product.unitPriceUSD}
+        `;
+        list.appendChild(listItem);
+      });
+
+      resultDiv.appendChild(list);
+    }
+
+    displayResult(productData, action);
+  </script>
+</body>
+</html>
