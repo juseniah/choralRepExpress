@@ -11,7 +11,7 @@ import { getProductDetails } from "../services/productService";
 
 // Define getIndexPage controller
 export const getIndexPage = (req: Request, res: Response) => {
-  const indexPath = path.join(__dirname, "../../dist/index.html");
+  const indexPath = path.join(__dirname, "../../index.html");
   res.sendFile(indexPath);
 };
 
