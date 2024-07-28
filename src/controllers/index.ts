@@ -9,14 +9,14 @@ import {
 import { ProductDetails } from "../interfaces/ProductDetails";
 import { getProductDetails } from "../services/productService";
 
-// Define getIndexPage controller
-export const getIndexPage = (req: Request, res: Response) => {
+// Function to handle GET request for the index page
+function handleGetIndexPage(req: Request, res: Response): void {
   const indexPath = path.join(__dirname, "../../index.html");
   res.sendFile(indexPath);
-};
+}
 
-// Define postIndexPage controller
-export const postIndexPage = async (req: Request, res: Response) => {
+// Function to handle POST request for the index page
+async function handlePostIndexPage(req: Request, res: Response): Promise<void> {
   try {
     console.log("Received POST request to /");
     const ids = req.body.ids.split(",").map((id: string) => id.trim());
@@ -31,30 +31,29 @@ export const postIndexPage = async (req: Request, res: Response) => {
     }
 
     const exportOption = req.body.exportOption as string;
-
     let action: string[] = []; // Array to store the actions taken
 
     if (exportOption === "googleSheet" || exportOption === "all") {
       console.log("Exporting data to Jussi's Google Sheet");
       console.log(
-        "https://docs.google.com/spreadsheets/d/1txP1NqXgapXFrg3IDTNiMVMxLyIHKIsxyUOs0L_2ceo/edit?usp=sharing"
+          "https://docs.google.com/spreadsheets/d/1txP1NqXgapXFrg3IDTNiMVMxLyIHKIsxyUOs0L_2ceo/edit?usp=sharing"
       );
-      appendDataToGoogleSheet(
-        "1txP1NqXgapXFrg3IDTNiMVMxLyIHKIsxyUOs0L_2ceo",
-        productData
+      await appendDataToGoogleSheet(
+          "1txP1NqXgapXFrg3IDTNiMVMxLyIHKIsxyUOs0L_2ceo",
+          productData
       );
       action.push("Exported to Google Sheets");
     }
 
     if (exportOption === "csv" || exportOption === "all") {
       console.log("Exporting data as CSV");
-      writeDataToCSV(productData);
+      await writeDataToCSV(productData);
       action.push("Exported as CSV");
     }
 
     if (exportOption === "xlsx" || exportOption === "all") {
       console.log("Exporting data as XLSX");
-      writeDataToXLSX(productData);
+      await writeDataToXLSX(productData);
       action.push("Exported as XLSX");
     }
 
@@ -65,8 +64,8 @@ export const postIndexPage = async (req: Request, res: Response) => {
     };
     const resultEjsFilePath = path.join(__dirname, "../../dist/result.ejs");
     const renderedHtml = await ejs.renderFile(
-      resultEjsFilePath,
-      templateData
+        resultEjsFilePath,
+        templateData
     );
 
     console.log("Sending response");
@@ -74,7 +73,9 @@ export const postIndexPage = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error processing request:", error);
     res
-      .status(500)
-      .send({ error: "An error occurred while processing the request" });
+        .status(500)
+        .send({ error: "An error occurred while processing the request" });
   }
-};
+}
+
+export { handleGetIndexPage, handlePostIndexPage };

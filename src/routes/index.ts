@@ -1,10 +1,10 @@
 import express from "express";
-import { getIndexPage, postIndexPage } from "../controllers/index";
+import { handleGetIndexPage, handlePostIndexPage } from "../controllers";
 
 const router = express.Router();
 
 // Define routes
-router.get("/", getIndexPage);
-router.post("/", postIndexPage);
+router.get("/", handleGetIndexPage);
+router.post("/", handlePostIndexPage);
 
 export default router;

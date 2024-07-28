@@ -35,7 +35,7 @@ function scrapeSongDataFromHtml(id: string, html: string): ProductDetails {
   const unitPrice = $(".top-price").first().text().trim();
   const matchResult = unitPrice.match(/[\d.]+/);
   const unitPriceUSD = matchResult ? +matchResult[0] : 0;
-  const productDetails: ProductDetails = {
+  return {
     id,
     title,
     composer,
@@ -43,7 +43,6 @@ function scrapeSongDataFromHtml(id: string, html: string): ProductDetails {
     publisher,
     unitPriceUSD: unitPriceUSD,
   };
-  return productDetails;
 }
 
 async function delay(ms: number): Promise<void> {
@@ -65,16 +64,13 @@ async function getHtmlFromPepper(id: string): Promise<string> {
     await page.goto(sheetMusicUrl, { waitUntil: 'networkidle2' });
 
     // Wait for Cloudflare challenge to be solved
-    await delay(2000); // Adjust timeout as needed
+    await delay(500); // Adjust timeout as needed
 
     // Optionally, wait for a specific element to ensure page is fully loaded
-    await page.waitForSelector('body', { timeout: 30000 });
+    await page.waitForSelector('body', { timeout: 500 });
 
     const html = await page.content();
     await browser.close();
-
-    // Log the raw HTML response for debugging
-    console.log(`Raw HTML response for ${id}:\n`, html);
 
     return html;
   } catch (error) {
