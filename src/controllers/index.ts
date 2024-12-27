@@ -20,6 +20,18 @@ export async function handlePostIndexPage(req: Request, res: Response): Promise<
       return
     }
 
+    const urlRegex = /^(https?:\/\/)?([\w\-]+(\.[\w\-]+)+)(:\d+)?(\/.*)?$/
+    if (urlRegex.test(html.trim())) {
+      res.status(400).send({ error: 'A URL was submitted. Submit the HTML source of the product page instead.' })
+      return
+    }
+
+    const productIdRegex = /^\d+$/
+    if (productIdRegex.test(html.trim())) {
+      res.status(400).send({ error: 'A product ID was submitted. Submit the HTML source of the product page instead.' })
+      return
+    }
+
     const productDetails: ProductDetails = getProductDetailsFromHtml(html)
 
     if (!productDetails.id) {
