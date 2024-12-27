@@ -56,7 +56,7 @@ export async function handlePostIndexPage(req: Request, res: Response): Promise<
       productData: JSON.stringify(productData),
       action: action.join(', '),
     }
-    const resultEjsFilePath = path.join(__dirname, '../views/result.ejs')
+    const resultEjsFilePath = path.join(__dirname, '../../src/views/result.ejs')
     const renderedHtml = await ejs.renderFile(resultEjsFilePath, templateData)
 
     console.log('Sending response')
