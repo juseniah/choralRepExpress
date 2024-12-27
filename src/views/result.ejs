@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JW Pepper Data</title>
+  <link rel="stylesheet" href="/css/index.css" />
+</head>
+<body>
+<div id="container">
+  <h1>Sheet Music Product Data</h1>
+
+  <!-- The same form from index.html -->
+  <form action="/" method="post" class="show-form">
+    <label for="html">Source HTML:</label>
+    <textarea
+            name="html"
+            id="html"
+            rows="10"
+            cols="50"
+            placeholder="Paste the HTML source of the product page here"
+            required
+    ></textarea>
+    <br />
+    <label>
+      <input type="checkbox" name="exportOption" value="googleSheet" />
+      Export to Google Sheets
+    </label>
+    <label>
+      <input type="checkbox" name="exportOption" value="csv" />
+      Export to CSV
+    </label>
+    <label>
+      <input type="checkbox" name="exportOption" value="xlsx" />
+      Export to XLSX
+    </label>
+    <br />
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- The results area is initially hidden until we have data to display -->
+  <div id="result" class="hide-result"></div>
+</div>
+
+<script>
+  // Injected data from server-side (handlePostIndexPage)
+  const productData = JSON.parse(`<%- productData %>`);
+  const action = "<%= action %>";
+
+  function displayResult(data, action) {
+    const resultDiv = document.getElementById("result");
+    // Always show the results area
+    resultDiv.classList.remove("hide-result");
+
+    // Clear any old content
+    resultDiv.innerHTML = "";
+
+    // Display an action message (e.g., "Exported to Google Sheets, Exported as CSV")
+    const actionMessageElement = document.createElement("p");
+    actionMessageElement.textContent = action
+            ? `Action taken: ${action}`
+            : "Action taken: None";
+    resultDiv.appendChild(actionMessageElement);
+
+    // If we have no product data, just show a message
+    if (!data || !data.length) {
+      const errorElement = document.createElement("p");
+      errorElement.textContent = "No product data received.";
+      resultDiv.appendChild(errorElement);
+      return;
+    }
+
+    // Single product usage:
+    const product = data[0];
+
+    // Display product info without a bullet list
+    const productInfo = `
+          <p><strong>ID:</strong> ${product.id}</p>
+          <p><strong>Title:</strong> ${product.title}</p>
+          <p><strong>Composer:</strong> ${product.composer}</p>
+          <p><strong>Voicing:</strong> ${product.voicing}</p>
+          <p><strong>Publisher:</strong> ${product.publisher}</p>
+          <p><strong>Unit Price (USD):</strong> ${product.unitPriceUSD}</p>
+        `;
+
+    resultDiv.innerHTML += productInfo;
+  }
+
+  // On page load, call displayResult if we have productData
+  displayResult(productData, action);
+</script>
+</body>
+</html>

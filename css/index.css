@@ -3,9 +3,7 @@
 body {
   font-family: 'Josefin Sans', sans-serif;
   background-color: #333;
-  /* Dark mode background */
   color: #fff;
-  /* Dark mode text color */
   line-height: 1.6; }
 
 h1 {
@@ -21,39 +19,34 @@ h1 {
 .show-form {
   padding: 2rem;
   background-color: #444;
-  /* Dark mode form background */
   box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
-  /* Dark mode form shadow */
   border-radius: 5px; }
 
 .hide-form {
   display: none; }
 
-textarea {
+textarea,
+input[type="text"] {
   width: 100%;
   padding: 0.5rem;
   font-size: 1rem;
   font-family: inherit;
   resize: vertical;
   background-color: #555;
-  /* Dark mode textarea background */
   color: #fff;
-  /* Dark mode textarea text color */ }
+  margin-bottom: 1rem; }
 
 label {
   display: block;
   margin: 1rem 0;
-  color: #fff;
-  /* Dark mode label text color */ }
+  color: #fff; }
 
 input[type="checkbox"] {
   margin-right: 0.5rem; }
 
 button[type="submit"] {
   background-color: #fff;
-  /* Dark mode button background */
   color: #333;
-  /* Dark mode button text color */
   font-size: 1rem;
   padding: 0.5rem 1rem;
   cursor: pointer;
@@ -61,17 +54,14 @@ button[type="submit"] {
   border-radius: 5px; }
 
 button[type="submit"]:hover {
-  background-color: #ddd;
-  /* Dark mode button hover background */ }
+  background-color: #ddd; }
 
 #result {
   max-width: 800px;
   margin: 2rem auto;
   padding: 1rem;
   background-color: #444;
-  /* Dark mode result background */
   box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
-  /* Dark mode result shadow */
   border-radius: 5px; }
 
 .hide-result {

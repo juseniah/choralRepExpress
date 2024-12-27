@@ -1,67 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>JW Pepper Data</title>
   <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
-  <div id="container">
-    <h1>Sheet Music Product Data</h1>
-    <form action="/" method="post" class="show-form">
-      <textarea name="ids" rows="5" cols="50" placeholder="Enter JW Pepper product IDs (separated by commas)"></textarea>
-      <br>
-      <label><input type="checkbox" name="exportOption" value="googleSheet">Export to Google Sheets</label>
-      <label><input type="checkbox" name="exportOption" value="csv">Export to CSV</label>
-      <label><input type="checkbox" name="exportOption" value="xlsx">Export to XLSX</label>
-      <br>
-      <button type="submit">Submit</button>
-    </form>
+<div id="container">
+  <h1>Sheet Music Product Data</h1>
 
-    <div id="result" class="hide-result"></div>
-  </div>
+  <!-- The form is always visible; it’s never hidden or removed -->
+  <form action="/" method="post" class="show-form">
+    <label for="html">Source HTML:</label>
+    <textarea
+      name="html"
+      id="html"
+      rows="10"
+      cols="50"
+      placeholder="Paste the HTML source of the product page here"
+      required
+    ></textarea>
+    <br>
+    <label>
+      <input type="checkbox" name="exportOption" value="googleSheet">
+      Export to Google Sheets
+    </label>
+    <label>
+      <input type="checkbox" name="exportOption" value="csv">
+      Export to CSV
+    </label>
+    <label>
+      <input type="checkbox" name="exportOption" value="xlsx">
+      Export to XLSX
+    </label>
+    <br>
+    <button type="submit">Submit</button>
+  </form>
 
-  <script>
-    const productData = JSON.parse(`<%- productData %>`);
-    const action = "<%= action %>";
+  <!-- Results area is initially hidden, but once we have data, it becomes visible -->
+  <div id="result" class="hide-result"></div>
+</div>
 
-    function displayResult(data, action) {
-      const form = document.querySelector('.show-form');
-      const resultDiv = document.getElementById('result');
+<script>
+  // productData and action are provided by EJS server-side rendering
+  // If they're empty/undefined on first page load, that's fine
+  const productData = JSON.parse(`<%- productData %>`) || []
+  const action = '<%= action %>' || ''
 
-      // Hide the form
-      form.classList.add('hide-form');
+  function displayResult(data, action) {
+    const resultDiv = document.getElementById('result')
 
-      // Show the results
-      resultDiv.classList.remove('hide-result');
+    resultDiv.classList.remove('hide-result')
+    resultDiv.innerHTML = ''
 
-      // Clear any existing content
-      resultDiv.innerHTML = '';
+    const actionMessageElement = document.createElement('p')
+    actionMessageElement.textContent = action
+      ? `Action taken: ${action}`
+      : 'Action taken: None'
+    resultDiv.appendChild(actionMessageElement)
 
-      // Display action message
-      const actionMessageElement = document.createElement('p');
-      actionMessageElement.textContent = `Action taken: ${action}`;
-      resultDiv.appendChild(actionMessageElement);
-
-      // Display product details
-      const list = document.createElement("ul");
-
-      data.forEach((product) => {
-        const listItem = document.createElement("li");
-        listItem.innerHTML = `
-          ID: ${product.id}<br>
-          Title: ${product.title}<br>
-          Composer: ${product.composer}<br>
-          Voicing: ${product.voicing}<br>
-          Publisher: ${product.publisher}<br>
-          Unit Price (USD): ${product.unitPriceUSD}
-        `;
-        list.appendChild(listItem);
-      });
-
-      resultDiv.appendChild(list);
+    if (!data || !data.length) {
+      const errorElement = document.createElement('p')
+      errorElement.textContent = 'No product data received.'
+      resultDiv.appendChild(errorElement)
+      return
     }
 
-    displayResult(productData, action);
-  </script>
+    const product = data[0]
+
+    const productInfo = `
+      <p><strong>ID:</strong> ${product.id}</p>
+      <p><strong>Title:</strong> ${product.title}</p>
+      <p><strong>Composer:</strong> ${product.composer}</p>
+      <p><strong>Voicing:</strong> ${product.voicing}</p>
+      <p><strong>Publisher:</strong> ${product.publisher}</p>
+      <p><strong>Unit Price (USD):</strong> ${product.unitPriceUSD}</p>
+    `
+
+    resultDiv.innerHTML += productInfo
+  }
+
+  // If the server has injected data, show it on page load
+  displayResult(productData, action)
+</script>
 </body>
 </html>
